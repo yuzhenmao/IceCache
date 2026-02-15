@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>IceCache</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick-theme.css"/>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <link rel="stylesheet" href="./website/index.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+</head>
+<body>
+
+<a href="https://github.com/yuzhenmao/IceCache" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: fixed; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+<div class="container-fluid text-center">
+    <div class="row content">
+        <h1 class="display-1">IceCache</h1>
+      <p class="lead">Memory-efficient KV-cache Management for Long-Sequence LLMs</p>
+        <div class="col-sm-4"></div>
+        <div class="col-sm-1">
+            <a href="https://scholar.google.com/citations?user=9wKn1A0AAAAJ&hl=en"><p class="name">Yuzhen Mao</p></a>
+            <p class="affiliation">Simon Fraser University</p>
+        </div>
+        <div class="col-sm-1">
+            <a href="https://qtwang.github.io/"><p class="name">Qitong Wang</p></a>
+            <p class="affiliation">Harvard University</p>
+        </div>
+        <div class="col-sm-1">
+            <a href="https://sites.google.com/view/esterlab"><p class="name">Martin Ester</p></a>
+            <p class="affiliation">Simon Fraser University</p>
+        </div>
+        <div class="col-sm-1">
+            <a href="https://www.sfu.ca/~keli/"><p class="name">Ke Li</p></a>
+            <p class="affiliation">Simon Fraser University</p>
+        </div>
+        <div class="col-sm-5"></div>
+    </div>
+
+  <div class="col-sm-4 sidenav text-left">
+      <div class="container-fluid">
+          <h3 class="shift">Contents</h3>
+      <ul class="nav nav-pills nav-stacked">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#indexselect">Indexing & Page Selection</a></li>
+        <li><a href="#loading">Page Bulk-loading</a></li>
+        <li><a href="#b1">Benchmarking LongBench</a></li>
+        <li><a href="#b2">Benchmarking RULER</a></li>
+        <li><a href="#citation">Citation</a></li>
+      </ul><br>
+      </div>
+
+    </div>
+
+  <div>
+    <a href="https://iclr.cc/Conferences/2026">ICLR 2026</a>
+  </div>
+
+  <div class="col-sm-4 sidenav barright text-left">
+      <div class="container-fluid">
+          <h3>Links</h3>
+          <div class="row">
+              <div class="col-sm-6">
+                  <a href="https://openreview.net/pdf?id=yHxSKM9kdr"><img src="./website/paper_icon.jpg" alt="Paper" width=48px></a>
+                  <p>Paper</p>
+              </div>
+              <div class="col-sm-6">
+                  <a href="https://github.com/yuzhenmao/IceCache"><img src="./website/github.jpg" alt="Github" width=48px></a>
+                  <p>Code</p>
+              </div>
+          </div>
+          <div class="row previous-work">
+              <div class="col-sm-12">
+                  <h4>Previous Work</h4>
+                  <a href="https://yuzhenmao.github.io/IceFormer/" class="iceformer-link">
+                      <div class="link-card">
+                          <strong>IceFormer</strong>
+                          <p class="link-description"></p>
+                      </div>
+                  </a>
+              </div>
+          </div>
+      </div>
+    </div>
+
+  <div class="row content">
+    <div class="col-sm-3">
+    </div>
+
+    <div class="col-sm-6 text-left">
+
+        <div class="video-container">
+            <iframe class="responsive-iframe" src="https://www.youtube.com/embed/6W0DtYRzFng" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+        <hr>
+
+      <h2 id="overview">Overview</h2>
+        <ul>
+          <li>During the prefill stage, tokens are indexed into a tree structure (the DCI-tree) according to their semantic similarity in the transformed key-embedding space. Each leaf node of the DCI-tree corresponds to a physical memory page.</li>
+          <li>During the decoding stage, given a query q, IceCache performs a tree search to identify the top-k tokens most relevant to q. The zoomed-in section at the bottom illustrates that these critical tokens (highlighted in yellow) tend to be clustered within the same leaf nodes and are stored together in corresponding memory pages.</li>
+          <li>After the query-aware token search, the pages (leaf nodes) containing the critical tokens are selected, and all tokens within these pages are utilized in the subsequent sparse attention with q.</li>
+        </ul>
+
+        <img width=100% controls autoplay muted loop src="./website/pipeline.png">
+
+        <hr>
+
+     <h2 id="indexselect">Indexing and Page Selection</h2>
+      <p>
+        We Illustrate the DCI-tree below: The hierarchical structure on the left visualizes the result of indexing key embeddings where each tree node stores metadata for the tokens such as the key ID and node index. The tables on the right depict the mapping between nodes in the DCI-tree and the corresponding pages in physical memory. For each selected node, a mapping table is used to locate the memory region containing the associated key-value embeddings.
+      </p>
+      <p>
+        During the decoding phase, given a query, IceCache performs a head-specific page selection to identify the most relevant key pages for each attention head. Leveraging the hierarchical structure built during indexing, we apply a fast ANN search method called M-DCI, to find the top-k pages from the DCI-tree that are closest to the current query embedding for each head independently.
+      </p>
+        <img width=100% controls autoplay muted loop src="./website/kvcache.png">
+        <hr>
+
+
+    <h2 id="loading">Page Bulk-loading</h2>
+      <p>
+        After IceCache selects important KV-pages, it aggregates all selected pages into a contiguous CPU preloading buffer. This buffer is then transferred via high-throughput PCIe transaction to a pre-allocated GPU buffer. Finally, the transferred blocks are scattered into their exact locations in the KV-Cache table. This bulk transfer avoids many small PCIe copies and significantly improves utilization.
+      </p>
+        <div class="text-center">
+          <img width=72% controls autoplay muted loop src="./website/bulk_load.png">
+        </div>
+        <hr>
+
+    <h2 id="b1">Benchmarking LongBench</h2>
+        <p>
+          In the figure below, we present the accuracy comparison of our method (ICE) with <a href="https://arxiv.org/abs/2404.14469">SnapKV</a> (SKV), <a href="https://arxiv.org/abs/2309.17453">SteamingLLM</a> (SLM), <a href="https://openreview.net/forum?id=ulCAPXYXfa">OmniKV</a> (OKV), <a href="https://arxiv.org/abs/2410.16179">MagicPig</a> (MPG), <a href="https://arxiv.org/abs/2407.12820">PQCache</a> (PQC), <a href="https://openreview.net/pdf?id=4oAt5L4lYe">ArkVale</a> (AKV), Full KV (FULL) and ground-truth top-k (TOP-k) on LongBench for Llama-3.1-8B-Instruct and Mistral-7B-Instruct. Additionally, we present results for IceCache incorporating the "layer-reuse" technique (reusing the same selected KV-page indices across layers). From the table, we observe that IceCache and IceCache(r) generally outperforms other methods even with only 25% of KV cache budgets.
+        </p>
+        <img width=100% controls autoplay muted loop src="./website/longbench.png">
+
+        <hr>
+
+        <p>
+          We compare the inference latency (Time-to-the-second-toke and Time-per-output-token) of each method on LongBench. These two figures (a and b) below reveals that IceCache and IceCache(reuse) offer a strong balance between efficiency and accuracy, with the reuse variant showing how our approach can further optimize latency without significantly sacrificing performance.
+         <p>
+         <p>
+          We also presents a detailed breakdown of TPOT latency for IceCache at a sequence length of 36k, with a total latency of 0.11 seconds. In Figure (c), “Loading”, “Query”, and “Decoding” correspond to the overhead from CPU–GPU communication, DCI-query operations, and the overall LLM decoding process, respectively. The largest contributors to latency are the DCI-query module (0.05 s) and decoding (0.04 s), while GPU–CPU offloading and other miscellaneous operations add only 0.015 seconds and 0.005 seconds, respectively.
+        </p>
+
+        <img width=100% controls autoplay muted loop src="./website/latency.png">
+
+        <hr>
+
+
+        <h2 id="b2">Benchmarking RULER</h2>
+        <p>
+          To further evaluate the performance of IceCache under extremely long-context settings, we conduct experiments on the RULER benchmark with context lengths of 150k, 200k, and 250k tokens, using a token budget of 256. The experiments are conducted using Qwen3-4B-Instruct-2507 on a single H100 GPU with 64 CPU threads enabled. As shown in the table below, IceCache and IceCache(r) consistently maintain accuracy comparable to Full-KV across all tasks and context lengths.
+        </p>
+        <div class="text-center">
+        <img width=60% controls autoplay muted loop src="./website/ruler.png">
+        </div>
+
+
+        <hr>
+
+        <p>
+          The figure below further demonstrates that, as the input context grows, both IceCache and its variant exhibit a substantially slower increase in per-token decoding latency than Full-KV, whose decoding cost scales sharply with sequence length. These results indicate that IceCache achieves a better accuracy–latency trade-off for extremely long-context inference, enabling scalable decoding without sacrificing accuracies on RULER benchmark.
+        </p>
+
+        <div class="text-center">
+        <img width=66% controls autoplay muted loop src="./website/scaling.png">
+        </div>
+
+        <hr>
+
+        <div id="citation">
+        <h2>Citation</h2>
+            <pre><code>@inproceedings{
+mao2026icecache,
+title={IceCache: Memory-Efficient {KV}-cache Management for Long-Sequence {LLM}s},
+author={Yuzhen Mao and Qitong Wang and Martin Ester and Ke Li},
+booktitle={The Fourteenth International Conference on Learning Representations},
+year={2026},
+url={https://openreview.net/forum?id=yHxSKM9kdr}
+}</code></pre>
+          </div>
+        </div>
+
+
+
+    <div class="col-sm-3 sidenav">
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    var show_option = 4;
+    $(document).ready(function(){
+      $('.my-carousel').slick({
+        centerMode: true,
+	   dots: true,
+	  centerPadding: '20px',
+	  slidesToShow: 3,
+	  infinite: true,
+	  autoplay: true,
+  	  // autoplaySpeed: 2000,
+  	  autoplaySpeed: 4000,
+  	  arrows: true,
+  	  focusOnSelect: true,
+  	  slidesToScroll: 3,
+  	  responsive: [
+    {
+      breakpoint: 720,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2
+      }
+    },
+    {
+      breakpoint: 512,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }
+  ]
+      });
+    });
+
+$(document).ready(function(){
+  // Add smooth scrolling to all links
+  $("a").on('click', function(event) {
+
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 600, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+});
+
+  </script>
+
+
+
+</body>
+</html>
