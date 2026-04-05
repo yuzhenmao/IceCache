@@ -1,0 +1,12 @@
+[submodule "IceCache/3rdparty/cutlass"]
+	path = IceCache/3rdparty/cutlass
+	url = https://github.com/NVIDIA/cutlass.git
+[submodule "IceCache/3rdparty/flashinfer"]
+	path = IceCache/3rdparty/flashinfer
+	url = https://github.com/flashinfer-ai/flashinfer.git
+[submodule "IceCache/3rdparty/pybind11"]
+	path = IceCache/3rdparty/pybind11
+	url = https://github.com/pybind/pybind11.git
+[submodule "IceCache/3rdparty/raft"]
+	path = IceCache/3rdparty/raft
+	url = https://github.com/rapidsai/raft.git
