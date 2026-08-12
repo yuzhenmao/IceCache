@@ -1,3 +1,5 @@
+
+
 # IceCache: Memory-Efficient KV-cache Management for Long-Sequence LLMs
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/yuzhenmao/IceCache/blob/main/LICENSE)
@@ -97,7 +99,7 @@ M-DCI is maintained in its own repository. Clone it anywhere outside the IceCach
 ```bash
 git clone https://github.com/yuzhenmao/M-DCI.git
 cd M-DCI
-python3 setup.py install
+pip install .
 ```
 
 See the [M-DCI README](https://github.com/yuzhenmao/M-DCI) for build prerequisites (OpenBLAS / Apple Accelerate, OpenMP) and troubleshooting.
@@ -169,7 +171,7 @@ This codebase builds upon [ArkVale](https://github.com/pku-liang/ArkVale). We th
 ## Citation
 
 ```bibtex
-@inproceedings{
+@inproend
 mao2024iceformer,
 title={IceFormer: Accelerated Inference with Long-Sequence Transformers on {CPU}s},
 author={Yuzhen Mao and Martin Ester and Ke Li},
@@ -179,7 +181,7 @@ url={https://openreview.net/forum?id=6RR3wU4mSZ}
 }
 ```
 ```bibtex
-@inproceedings{
+@inproend
 mao2026icecache,
 title={IceCache: Memory-Efficient {KV}-cache Management for Long-Sequence {LLM}s},
 author={Yuzhen Mao and Qitong Wang and Martin Ester and Ke Li},
